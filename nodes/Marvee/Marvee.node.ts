@@ -8,7 +8,7 @@ export class Marvee implements INodeType {
 		group: ['transform'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
-		description: 'Get data from NASAs API',
+		description: 'Get data from Marvee API',
 		defaults: {
 			name: 'Marvee',
 		},
@@ -29,146 +29,450 @@ export class Marvee implements INodeType {
 		},
 		properties: [
 			{
-				displayName: 'Resource',
+				displayName: 'Recurso',
 				name: 'resource',
 				type: 'options',
 				noDataExpression: true,
 				options: [
 					{
-						name: 'Astronomy Picture of the Day',
-						value: 'astronomyPictureOfTheDay',
+						name: 'Extrato',
+						value: 'statement',
 					},
 					{
-						name: 'Mars Rover Photo',
-						value: 'marsRoverPhotos',
+						name: 'Venda',
+						value: 'sales',
 					},
 				],
-				default: 'astronomyPictureOfTheDay',
+				default: 'statement',
 			},
+			// Statement Operations
 			{
-				displayName: 'Operation',
+				displayName: 'Operação',
 				name: 'operation',
 				type: 'options',
 				noDataExpression: true,
 				displayOptions: {
 					show: {
-						resource: ['astronomyPictureOfTheDay'],
+						resource: ['statement'],
 					},
 				},
 				options: [
 					{
-						name: 'Get',
-						value: 'get',
-						action: 'Get the APOD',
-						description: 'Get the Astronomy Picture of the day',
+						name: 'Consultar',
+						value: 'get-statement',
+						action: 'Consultar extrato',
+						description: 'Consulta o extrato bancário',
 						routing: {
 							request: {
 								method: 'GET',
-								url: '/planetary/apod',
+								url: '/extrato',
 							},
 						},
 					},
 				],
-				default: 'get',
+				default: 'get-statement',
 			},
+			// Sales Operations
 			{
-				displayName: 'Operation',
+				displayName: 'Operação',
 				name: 'operation',
 				type: 'options',
 				noDataExpression: true,
 				displayOptions: {
 					show: {
-						resource: ['marsRoverPhotos'],
+						resource: ['sales'],
 					},
 				},
 				options: [
 					{
-						name: 'Get',
-						value: 'get',
-						action: 'Get mars rover photos',
-						description: 'Get photos from the Mars Rover',
+						name: 'Atualizar',
+						value: 'update-sales',
+						action: 'Atualizar venda',
+						description: 'Atualiza uma venda existente',
 						routing: {
 							request: {
-								method: 'GET',
-							},
-						},
-					},
-				],
-				default: 'get',
-			},
-			{
-				displayName: 'Rover Name',
-				description: 'Choose which Mars Rover to get a photo from',
-				required: true,
-				name: 'roverName',
-				type: 'options',
-				options: [
-					{ name: 'Curiosity', value: 'curiosity' },
-					{ name: 'Opportunity', value: 'opportunity' },
-					{ name: 'Perseverance', value: 'perseverance' },
-					{ name: 'Spirit', value: 'spirit' },
-				],
-				routing: {
-					request: {
-						url: '=/mars-photos/api/v1/rovers/{{$value}}/photos',
-					},
-				},
-				default: 'curiosity',
-				displayOptions: {
-					show: {
-						resource: ['marsRoverPhotos'],
-					},
-				},
-			},
-			{
-				displayName: 'Date',
-				description: 'Earth date',
-				required: true,
-				name: 'marsRoverDate',
-				type: 'dateTime',
-				default: '',
-				displayOptions: {
-					show: {
-						resource: ['marsRoverPhotos'],
-					},
-				},
-				routing: {
-					request: {
-						// You've already set up the URL. qs appends the value of the field as a query string
-						qs: {
-							earth_date: '={{ new Date($value).toISOString().substr(0,10) }}',
-						},
-					},
-				},
-			},
-			{
-				displayName: 'Additional Fields',
-				name: 'additionalFields',
-				type: 'collection',
-				default: {},
-				placeholder: 'Add Field',
-				displayOptions: {
-					show: {
-						resource: ['astronomyPictureOfTheDay'],
-						operation: ['get'],
-					},
-				},
-				options: [
-					{
-						displayName: 'Date',
-						name: 'apodDate',
-						type: 'dateTime',
-						default: '',
-						routing: {
-							request: {
-								// You've already set up the URL. qs appends the value of the field as a query string
-								qs: {
-									date: '={{ new Date($value).toISOString().substr(0,10) }}',
+								method: 'PUT',
+								url: '=/vendas/{{$parameter["salesId"]}}',
+								body: {
+									cliente_id: '={{$parameter["clienteId"]}}',
+									produto_id: '={{$parameter["produtoId"]}}',
+									quantidade: '={{$parameter["quantidade"]}}',
+									valor_unitario: '={{$parameter["valorUnitario"]}}',
+									data_venda: '={{$parameter["dataVenda"]}}',
+									descricao: '={{$parameter["descricao"]}}',
 								},
 							},
 						},
 					},
+					{
+						name: 'Consultar',
+						value: 'get-sales',
+						action: 'Consultar vendas',
+						description: 'Consulta as vendas',
+						routing: {
+							request: {
+								method: 'GET',
+								url: '/vendas',
+							},
+						},
+					},
+					{
+						name: 'Criar',
+						value: 'create-sales',
+						action: 'Criar venda',
+						description: 'Cria uma nova venda',
+						routing: {
+							request: {
+								method: 'POST',
+								url: '/vendas',
+								body: {
+									cliente_id: '={{$parameter["clienteId"]}}',
+									produto_id: '={{$parameter["produtoId"]}}',
+									quantidade: '={{$parameter["quantidade"]}}',
+									valor_unitario: '={{$parameter["valorUnitario"]}}',
+									data_venda: '={{$parameter["dataVenda"]}}',
+									descricao: '={{$parameter["descricao"]}}',
+								},
+							},
+						},
+					},
+					{
+						name: 'Deletar',
+						value: 'delete-sales',
+						action: 'Deletar venda',
+						description: 'Deleta uma venda existente',
+						routing: {
+							request: {
+								method: 'DELETE',
+								url: '=/vendas/{{$parameter["salesId"]}}',
+							},
+						},
+					},
+					{
+						name: 'Obter Por ID',
+						value: 'get-sales-by-id',
+						action: 'Obter venda por ID',
+						description: 'Obtém uma venda específica por ID',
+						routing: {
+							request: {
+								method: 'GET',
+								url: '=/vendas/{{$parameter["salesId"]}}',
+							},
+						},
+					},
 				],
+				default: 'get-sales',
+			},
+			// Statement Filters
+			{
+				displayName: 'Data Início',
+				name: 'dataInicio',
+				type: 'dateTime',
+				displayOptions: {
+					show: {
+						resource: ['statement'],
+						operation: ['get-statement'],
+					},
+				},
+				default: '',
+				description: 'Data de início para filtrar o extrato',
+				routing: {
+					request: {
+						qs: {
+							data_inicio: '={{$parameter["dataInicio"]}}',
+						},
+					},
+				},
+			},
+			{
+				displayName: 'Data Fim',
+				name: 'dataFim',
+				type: 'dateTime',
+				displayOptions: {
+					show: {
+						resource: ['statement'],
+						operation: ['get-statement'],
+					},
+				},
+				default: '',
+				description: 'Data de fim para filtrar o extrato',
+				routing: {
+					request: {
+						qs: {
+							data_fim: '={{$parameter["dataFim"]}}',
+						},
+					},
+				},
+			},
+			{
+				displayName: 'Tipo De Transação',
+				name: 'tipoTransacao',
+				type: 'options',
+				displayOptions: {
+					show: {
+						resource: ['statement'],
+						operation: ['get-statement'],
+					},
+				},
+				options: [
+					{
+						name: 'Todas',
+						value: '',
+					},
+					{
+						name: 'Débito',
+						value: 'debito',
+					},
+					{
+						name: 'Crédito',
+						value: 'credito',
+					},
+				],
+				default: '',
+				description: 'Tipo de transação para filtrar',
+				routing: {
+					request: {
+						qs: {
+							tipo: '={{$parameter["tipoTransacao"]}}',
+						},
+					},
+				},
+			},
+			{
+				displayName: 'Valor Mínimo',
+				name: 'valorMinimo',
+				type: 'number',
+				displayOptions: {
+					show: {
+						resource: ['statement'],
+						operation: ['get-statement'],
+					},
+				},
+				default: '',
+				description: 'Valor mínimo para filtrar transações',
+				routing: {
+					request: {
+						qs: {
+							valor_minimo: '={{$parameter["valorMinimo"]}}',
+						},
+					},
+				},
+			},
+			{
+				displayName: 'Valor Máximo',
+				name: 'valorMaximo',
+				type: 'number',
+				displayOptions: {
+					show: {
+						resource: ['statement'],
+						operation: ['get-statement'],
+					},
+				},
+				default: '',
+				description: 'Valor máximo para filtrar transações',
+				routing: {
+					request: {
+						qs: {
+							valor_maximo: '={{$parameter["valorMaximo"]}}',
+						},
+					},
+				},
+			},
+			// Sales Filters for List Operation
+			{
+				displayName: 'Data Início',
+				name: 'dataInicio',
+				type: 'dateTime',
+				displayOptions: {
+					show: {
+						resource: ['sales'],
+						operation: ['get-sales'],
+					},
+				},
+				default: '',
+				description: 'Data de início para filtrar vendas',
+				routing: {
+					request: {
+						qs: {
+							data_inicio: '={{$parameter["dataInicio"]}}',
+						},
+					},
+				},
+			},
+			{
+				displayName: 'Data Fim',
+				name: 'dataFim',
+				type: 'dateTime',
+				displayOptions: {
+					show: {
+						resource: ['sales'],
+						operation: ['get-sales'],
+					},
+				},
+				default: '',
+				description: 'Data de fim para filtrar vendas',
+				routing: {
+					request: {
+						qs: {
+							data_fim: '={{$parameter["dataFim"]}}',
+						},
+					},
+				},
+			},
+			{
+				displayName: 'Cliente ID',
+				name: 'clienteIdFilter',
+				type: 'string',
+				displayOptions: {
+					show: {
+						resource: ['sales'],
+						operation: ['get-sales'],
+					},
+				},
+				default: '',
+				description: 'ID do cliente para filtrar vendas',
+				routing: {
+					request: {
+						qs: {
+							cliente_id: '={{$parameter["clienteIdFilter"]}}',
+						},
+					},
+				},
+			},
+			{
+				displayName: 'Status',
+				name: 'status',
+				type: 'options',
+				displayOptions: {
+					show: {
+						resource: ['sales'],
+						operation: ['get-sales'],
+					},
+				},
+				options: [
+					{
+						name: 'Todas',
+						value: '',
+					},
+					{
+						name: 'Pendente',
+						value: 'pendente',
+					},
+					{
+						name: 'Confirmada',
+						value: 'confirmada',
+					},
+					{
+						name: 'Cancelada',
+						value: 'cancelada',
+					},
+				],
+				default: '',
+				description: 'Status da venda para filtrar',
+				routing: {
+					request: {
+						qs: {
+							status: '={{$parameter["status"]}}',
+						},
+					},
+				},
+			},
+			// Sales ID for Get by ID and Delete operations
+			{
+				displayName: 'ID Da Venda',
+				name: 'salesId',
+				type: 'string',
+				required: true,
+				displayOptions: {
+					show: {
+						resource: ['sales'],
+						operation: ['get-sales-by-id', 'update-sales', 'delete-sales'],
+					},
+				},
+				default: '',
+			},
+			// Sales Body Fields for Create and Update
+			{
+				displayName: 'Cliente ID',
+				name: 'clienteId',
+				type: 'string',
+				required: true,
+				displayOptions: {
+					show: {
+						resource: ['sales'],
+						operation: ['create-sales', 'update-sales'],
+					},
+				},
+				default: '',
+				description: 'ID do cliente',
+			},
+			{
+				displayName: 'Produto ID',
+				name: 'produtoId',
+				type: 'string',
+				required: true,
+				displayOptions: {
+					show: {
+						resource: ['sales'],
+						operation: ['create-sales', 'update-sales'],
+					},
+				},
+				default: '',
+				description: 'ID do produto',
+			},
+			{
+				displayName: 'Quantidade',
+				name: 'quantidade',
+				type: 'number',
+				required: true,
+				displayOptions: {
+					show: {
+						resource: ['sales'],
+						operation: ['create-sales', 'update-sales'],
+					},
+				},
+				default: 1,
+				description: 'Quantidade de produtos',
+			},
+			{
+				displayName: 'Valor Unitário',
+				name: 'valorUnitario',
+				type: 'number',
+				required: true,
+				displayOptions: {
+					show: {
+						resource: ['sales'],
+						operation: ['create-sales', 'update-sales'],
+					},
+				},
+				default: 0,
+				description: 'Valor unitário do produto',
+			},
+			{
+				displayName: 'Data Da Venda',
+				name: 'dataVenda',
+				type: 'dateTime',
+				required: true,
+				displayOptions: {
+					show: {
+						resource: ['sales'],
+						operation: ['create-sales', 'update-sales'],
+					},
+				},
+				default: '',
+			},
+			{
+				displayName: 'Descrição',
+				name: 'descricao',
+				type: 'string',
+				displayOptions: {
+					show: {
+						resource: ['sales'],
+						operation: ['create-sales', 'update-sales'],
+					},
+				},
+				default: '',
+				description: 'Descrição da venda',
 			},
 		],
 	};

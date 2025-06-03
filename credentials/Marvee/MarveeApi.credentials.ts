@@ -9,8 +9,14 @@ export class MarveeApi implements ICredentialType {
 		'https://docs.n8n.io/integrations/creating-nodes/build/declarative-style-node/';
 	properties: INodeProperties[] = [
 		{
-			displayName: 'API Key',
-			name: 'apiKey',
+			displayName: 'Client ID',
+			name: 'clientId',
+			type: 'string',
+			default: '',
+		},
+		{
+			displayName: 'Client Secret',
+			name: 'clientSecret',
 			type: 'string',
 			typeOptions: { password: true },
 			default: '',
@@ -21,6 +27,10 @@ export class MarveeApi implements ICredentialType {
 		properties: {
 			qs: {
 				api_key: '={{$credentials.apiKey}}',
+			},
+			headers: {
+				clientId: '{{$credentials.clientId}}',
+				clientSecret: '{{$credentials.clientSecret}}',
 			},
 		},
 	};
