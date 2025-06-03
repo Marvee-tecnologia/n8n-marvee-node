@@ -16,7 +16,7 @@ export class Marvee implements INodeType {
 		outputs: [NodeConnectionType.Main],
 		credentials: [
 			{
-				name: 'NasaPicsApi',
+				name: 'marveeApi',
 				required: true,
 			},
 		],
