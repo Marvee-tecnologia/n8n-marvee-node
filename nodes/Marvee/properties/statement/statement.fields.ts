@@ -2,10 +2,11 @@ import { INodeProperties } from 'n8n-workflow';
 
 export const statementFields: INodeProperties[] = [
 	{
-		displayName: 'Data Início',
+		displayName: 'Data Início *',
 		name: 'startDate',
 		type: 'dateTime',
 		required: true,
+		validateType: 'dateTime',
 		displayOptions: {
 			show: {
 				resource: ['statement'],
@@ -17,11 +18,12 @@ export const statementFields: INodeProperties[] = [
 		description: 'Data de início para filtrar o extrato (obrigatório)',
 	},
 	{
-		displayName: 'Data Fim',
+		displayName: 'Data Fim *',
 		name: 'endDate',
 		type: 'dateTime',
 		placeholder: 'Selecione a data de fim',
 		required: true,
+		validateType: 'dateTime',
 		displayOptions: {
 			show: {
 				resource: ['statement'],

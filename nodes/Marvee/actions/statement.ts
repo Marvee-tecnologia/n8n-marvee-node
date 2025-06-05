@@ -8,6 +8,9 @@ export async function handleGetStatement(this: IExecuteFunctions): Promise<INode
 	// Obter parâmetros obrigatórios
 	const startDate = this.getNodeParameter('startDate', 0) as string;
 	const endDate = this.getNodeParameter('endDate', 0) as string;
+	if (!startDate || !endDate) {
+		throw new NodeOperationError(this.getNode(), 'Data de início e fim são obrigatórios');
+	}
 
 	// Obter parâmetros opcionais
 	const conta = this.getNodeParameter('conta', 0, []) as string[];
