@@ -1,0 +1,110 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Adicionando Propriedades aos Arquivos Index
+
+**Ao criar um novo arquivo de propriedades, sempre lembre-se de importá-lo e exportá-lo no arquivo `index.ts` relevante.**
+
+## 1. Para Propriedades de Recurso Específico
+
+Quando criar um novo arquivo dentro de `nodes/Marvee/properties/RESOURCE/`, adicione ao `index.ts` do recurso:
+
+nested_code_snippet_typescript-replace_with-```typescript
+// nodes/Marvee/properties/statement/index.ts
+import { statementOperations } from './statement.operations';
+import { statementFields } from './statement.fields';
+import { newStatementPropertyFile } from './newStatementPropertyFile'; // <--- Sua nova importação
+
+export const statementProperties = [
+    ...statementOperations,
+    ...statementFields,
+    ...newStatementPropertyFile, // <--- Sua nova propriedade
+];
+close_nested_code_snippet-replace_with-```
+
+nested_code_snippet_typescript-replace_with-```typescript
+// nodes/Marvee/properties/sales/index.ts
+import { salesOperations } from './sales.operations';
+import { getSalesFields } from './getSales.fields';
+import { createUpdateSalesFields } from './createUpdateSales.fields';
+import { salesIdFields } from './salesId.fields';
+import { newSalesPropertyFile } from './newSalesPropertyFile'; // <--- Sua nova importação
+
+export const salesProperties = [
+    ...salesOperations,
+    ...getSalesFields,
+    ...salesIdFields,
+    ...createUpdateSalesFields,
+    ...newSalesPropertyFile, // <--- Sua nova propriedade
+];
+close_nested_code_snippet-replace_with-```
+
+## 2. Para Novos Recursos
+
+Quando criar um novo diretório de recurso em `nodes/Marvee/properties/NOVO_RECURSO/`, adicione ao `index.ts` principal:
+
+nested_code_snippet_typescript-replace_with-```typescript
+// nodes/Marvee/properties/index.ts
+import { commonProperties } from './common.properties';
+import { salesProperties } from './sales';
+import { statementProperties } from './statement';
+import { novoRecursoProperties } from './novoRecurso'; // <--- Seu novo recurso
+
+export const allMarveeProperties = [
+    ...commonProperties,
+    ...salesProperties,
+    ...statementProperties,
+    ...novoRecursoProperties, // <--- Suas novas propriedades de recurso
+];
+close_nested_code_snippet-replace_with-```
+
+## 3. Para Propriedades Comuns
+
+Se adicionar propriedades que são comuns a vários recursos, adicione ao arquivo `common.properties.ts`:
+
+nested_code_snippet_typescript-replace_with-```typescript
+// nodes/Marvee/properties/common.properties.ts
+import { INodeProperties } from 'n8n-workflow';
+
+export const commonProperties: INodeProperties[] = [
+    {
+        displayName: 'Recurso',
+        name: 'resource',
+        type: 'options',
+        noDataExpression: true,
+        options: [
+            {
+                name: 'Extrato',
+                value: 'statement',
+            },
+            {
+                name: 'Venda',
+                value: 'sales',
+            },
+            {
+                name: 'Novo Recurso', // <--- Adicione aqui novos recursos
+                value: 'novo-recurso',
+            },
+        ],
+        default: 'statement',
+        description: 'Recurso a ser acessado na API Marvee.',
+    },
+    // Adicione outras propriedades comuns aqui
+];
+close_nested_code_snippet-replace_with-```
+
+## Checklist de Verificação
+
+Antes de finalizar a adição de uma nova propriedade:
+
+- [ ] ✅ Criou o arquivo `.ts` da propriedade
+- [ ] ✅ Importou no `index.ts` do recurso (se aplicável)
+- [ ] ✅ Adicionou ao array de exportação
+- [ ] ✅ Se for um novo recurso, adicionou ao `index.ts` principal
+- [ ] ✅ Se for um novo recurso, adicionou à lista de opções em `common.properties.ts`
+- [ ] ✅ Testou que as propriedades aparecem corretamente na UI
+- [ ] ✅ Verificou que `displayOptions` estão funcionando
+
+**Dica:** Sempre mantenha a ordem lógica nos arrays - geralmente operações primeiro, depois campos específicos por operação.

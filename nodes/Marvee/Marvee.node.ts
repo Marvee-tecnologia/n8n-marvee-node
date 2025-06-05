@@ -1,4 +1,26 @@
-import { INodeType, INodeTypeDescription, NodeConnectionType } from 'n8n-workflow';
+import {
+	IExecuteFunctions,
+	ILoadOptionsFunctions,
+	INodeExecutionData,
+	INodeType,
+	INodeTypeDescription,
+	NodeConnectionType,
+	NodeOperationError,
+} from 'n8n-workflow';
+import {
+	handleCreateSales,
+	handleDeleteSales,
+	handleGetSales,
+	handleGetSalesById,
+	handleUpdateSales,
+} from './actions/sales';
+import { handleGetStatement } from './actions/statement';
+import {
+	getMarveeAccountsHelper,
+	getMarveeCategoriesHelper,
+	getMarveeCustomersHelper,
+} from './helpers/loadOptionsHelpers';
+import { allMarveeProperties } from './properties';
 
 export class Marvee implements INodeType {
 	description: INodeTypeDescription = {
@@ -16,464 +38,87 @@ export class Marvee implements INodeType {
 		outputs: [NodeConnectionType.Main],
 		credentials: [
 			{
-				name: 'marveeApi',
 				required: true,
+				name: 'marveeApi',
+				testedBy: 'marveeApi',
 			},
 		],
-		requestDefaults: {
-			baseURL: 'https://api-prod-aws.marvee.com.br/v1/',
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json',
+		properties: allMarveeProperties,
+	};
+
+	public methods: INodeType['methods'] = {
+		loadOptions: {
+			async getMarveeCustomers(this: ILoadOptionsFunctions) {
+				return getMarveeCustomersHelper(this);
+			},
+			async getMarveeAccounts(this: ILoadOptionsFunctions) {
+				return getMarveeAccountsHelper(this);
+			},
+			async getMarveeCategories(this: ILoadOptionsFunctions) {
+				return getMarveeCategoriesHelper(this);
 			},
 		},
-		properties: [
-			{
-				displayName: 'Recurso',
-				name: 'resource',
-				type: 'options',
-				noDataExpression: true,
-				options: [
-					{
-						name: 'Extrato',
-						value: 'statement',
-					},
-					{
-						name: 'Venda',
-						value: 'sales',
-					},
-				],
-				default: 'statement',
-			},
-			// Statement Operations
-			{
-				displayName: 'Operação',
-				name: 'operation',
-				type: 'options',
-				noDataExpression: true,
-				displayOptions: {
-					show: {
-						resource: ['statement'],
-					},
-				},
-				options: [
-					{
-						name: 'Consultar',
-						value: 'get-statement',
-						action: 'Consultar extrato',
-						description: 'Consulta o extrato bancário',
-						routing: {
-							request: {
-								method: 'GET',
-								url: '/extrato',
-							},
-						},
-					},
-				],
-				default: 'get-statement',
-			},
-			// Sales Operations
-			{
-				displayName: 'Operação',
-				name: 'operation',
-				type: 'options',
-				noDataExpression: true,
-				displayOptions: {
-					show: {
-						resource: ['sales'],
-					},
-				},
-				options: [
-					{
-						name: 'Atualizar',
-						value: 'update-sales',
-						action: 'Atualizar venda',
-						description: 'Atualiza uma venda existente',
-						routing: {
-							request: {
-								method: 'PUT',
-								url: '=/vendas/{{$parameter["salesId"]}}',
-								body: {
-									cliente_id: '={{$parameter["clienteId"]}}',
-									produto_id: '={{$parameter["produtoId"]}}',
-									quantidade: '={{$parameter["quantidade"]}}',
-									valor_unitario: '={{$parameter["valorUnitario"]}}',
-									data_venda: '={{$parameter["dataVenda"]}}',
-									descricao: '={{$parameter["descricao"]}}',
-								},
-							},
-						},
-					},
-					{
-						name: 'Consultar',
-						value: 'get-sales',
-						action: 'Consultar vendas',
-						description: 'Consulta as vendas',
-						routing: {
-							request: {
-								method: 'GET',
-								url: '/vendas',
-							},
-						},
-					},
-					{
-						name: 'Criar',
-						value: 'create-sales',
-						action: 'Criar venda',
-						description: 'Cria uma nova venda',
-						routing: {
-							request: {
-								method: 'POST',
-								url: '/vendas',
-								body: {
-									cliente_id: '={{$parameter["clienteId"]}}',
-									produto_id: '={{$parameter["produtoId"]}}',
-									quantidade: '={{$parameter["quantidade"]}}',
-									valor_unitario: '={{$parameter["valorUnitario"]}}',
-									data_venda: '={{$parameter["dataVenda"]}}',
-									descricao: '={{$parameter["descricao"]}}',
-								},
-							},
-						},
-					},
-					{
-						name: 'Deletar',
-						value: 'delete-sales',
-						action: 'Deletar venda',
-						description: 'Deleta uma venda existente',
-						routing: {
-							request: {
-								method: 'DELETE',
-								url: '=/vendas/{{$parameter["salesId"]}}',
-							},
-						},
-					},
-					{
-						name: 'Obter Por ID',
-						value: 'get-sales-by-id',
-						action: 'Obter venda por ID',
-						description: 'Obtém uma venda específica por ID',
-						routing: {
-							request: {
-								method: 'GET',
-								url: '=/vendas/{{$parameter["salesId"]}}',
-							},
-						},
-					},
-				],
-				default: 'get-sales',
-			},
-			// Statement Filters
-			{
-				displayName: 'Data Início',
-				name: 'dataInicio',
-				type: 'dateTime',
-				displayOptions: {
-					show: {
-						resource: ['statement'],
-						operation: ['get-statement'],
-					},
-				},
-				default: '',
-				description: 'Data de início para filtrar o extrato',
-				routing: {
-					request: {
-						qs: {
-							data_inicio: '={{$parameter["dataInicio"]}}',
-						},
-					},
-				},
-			},
-			{
-				displayName: 'Data Fim',
-				name: 'dataFim',
-				type: 'dateTime',
-				displayOptions: {
-					show: {
-						resource: ['statement'],
-						operation: ['get-statement'],
-					},
-				},
-				default: '',
-				description: 'Data de fim para filtrar o extrato',
-				routing: {
-					request: {
-						qs: {
-							data_fim: '={{$parameter["dataFim"]}}',
-						},
-					},
-				},
-			},
-			{
-				displayName: 'Tipo De Transação',
-				name: 'tipoTransacao',
-				type: 'options',
-				displayOptions: {
-					show: {
-						resource: ['statement'],
-						operation: ['get-statement'],
-					},
-				},
-				options: [
-					{
-						name: 'Todas',
-						value: '',
-					},
-					{
-						name: 'Débito',
-						value: 'debito',
-					},
-					{
-						name: 'Crédito',
-						value: 'credito',
-					},
-				],
-				default: '',
-				description: 'Tipo de transação para filtrar',
-				routing: {
-					request: {
-						qs: {
-							tipo: '={{$parameter["tipoTransacao"]}}',
-						},
-					},
-				},
-			},
-			{
-				displayName: 'Valor Mínimo',
-				name: 'valorMinimo',
-				type: 'number',
-				displayOptions: {
-					show: {
-						resource: ['statement'],
-						operation: ['get-statement'],
-					},
-				},
-				default: '',
-				description: 'Valor mínimo para filtrar transações',
-				routing: {
-					request: {
-						qs: {
-							valor_minimo: '={{$parameter["valorMinimo"]}}',
-						},
-					},
-				},
-			},
-			{
-				displayName: 'Valor Máximo',
-				name: 'valorMaximo',
-				type: 'number',
-				displayOptions: {
-					show: {
-						resource: ['statement'],
-						operation: ['get-statement'],
-					},
-				},
-				default: '',
-				description: 'Valor máximo para filtrar transações',
-				routing: {
-					request: {
-						qs: {
-							valor_maximo: '={{$parameter["valorMaximo"]}}',
-						},
-					},
-				},
-			},
-			// Sales Filters for List Operation
-			{
-				displayName: 'Data Início',
-				name: 'dataInicio',
-				type: 'dateTime',
-				displayOptions: {
-					show: {
-						resource: ['sales'],
-						operation: ['get-sales'],
-					},
-				},
-				default: '',
-				description: 'Data de início para filtrar vendas',
-				routing: {
-					request: {
-						qs: {
-							data_inicio: '={{$parameter["dataInicio"]}}',
-						},
-					},
-				},
-			},
-			{
-				displayName: 'Data Fim',
-				name: 'dataFim',
-				type: 'dateTime',
-				displayOptions: {
-					show: {
-						resource: ['sales'],
-						operation: ['get-sales'],
-					},
-				},
-				default: '',
-				description: 'Data de fim para filtrar vendas',
-				routing: {
-					request: {
-						qs: {
-							data_fim: '={{$parameter["dataFim"]}}',
-						},
-					},
-				},
-			},
-			{
-				displayName: 'Cliente ID',
-				name: 'clienteIdFilter',
-				type: 'string',
-				displayOptions: {
-					show: {
-						resource: ['sales'],
-						operation: ['get-sales'],
-					},
-				},
-				default: '',
-				description: 'ID do cliente para filtrar vendas',
-				routing: {
-					request: {
-						qs: {
-							cliente_id: '={{$parameter["clienteIdFilter"]}}',
-						},
-					},
-				},
-			},
-			{
-				displayName: 'Status',
-				name: 'status',
-				type: 'options',
-				displayOptions: {
-					show: {
-						resource: ['sales'],
-						operation: ['get-sales'],
-					},
-				},
-				options: [
-					{
-						name: 'Todas',
-						value: '',
-					},
-					{
-						name: 'Pendente',
-						value: 'pendente',
-					},
-					{
-						name: 'Confirmada',
-						value: 'confirmada',
-					},
-					{
-						name: 'Cancelada',
-						value: 'cancelada',
-					},
-				],
-				default: '',
-				description: 'Status da venda para filtrar',
-				routing: {
-					request: {
-						qs: {
-							status: '={{$parameter["status"]}}',
-						},
-					},
-				},
-			},
-			// Sales ID for Get by ID and Delete operations
-			{
-				displayName: 'ID Da Venda',
-				name: 'salesId',
-				type: 'string',
-				required: true,
-				displayOptions: {
-					show: {
-						resource: ['sales'],
-						operation: ['get-sales-by-id', 'update-sales', 'delete-sales'],
-					},
-				},
-				default: '',
-			},
-			// Sales Body Fields for Create and Update
-			{
-				displayName: 'Cliente ID',
-				name: 'clienteId',
-				type: 'string',
-				required: true,
-				displayOptions: {
-					show: {
-						resource: ['sales'],
-						operation: ['create-sales', 'update-sales'],
-					},
-				},
-				default: '',
-				description: 'ID do cliente',
-			},
-			{
-				displayName: 'Produto ID',
-				name: 'produtoId',
-				type: 'string',
-				required: true,
-				displayOptions: {
-					show: {
-						resource: ['sales'],
-						operation: ['create-sales', 'update-sales'],
-					},
-				},
-				default: '',
-				description: 'ID do produto',
-			},
-			{
-				displayName: 'Quantidade',
-				name: 'quantidade',
-				type: 'number',
-				required: true,
-				displayOptions: {
-					show: {
-						resource: ['sales'],
-						operation: ['create-sales', 'update-sales'],
-					},
-				},
-				default: 1,
-				description: 'Quantidade de produtos',
-			},
-			{
-				displayName: 'Valor Unitário',
-				name: 'valorUnitario',
-				type: 'number',
-				required: true,
-				displayOptions: {
-					show: {
-						resource: ['sales'],
-						operation: ['create-sales', 'update-sales'],
-					},
-				},
-				default: 0,
-				description: 'Valor unitário do produto',
-			},
-			{
-				displayName: 'Data Da Venda',
-				name: 'dataVenda',
-				type: 'dateTime',
-				required: true,
-				displayOptions: {
-					show: {
-						resource: ['sales'],
-						operation: ['create-sales', 'update-sales'],
-					},
-				},
-				default: '',
-			},
-			{
-				displayName: 'Descrição',
-				name: 'descricao',
-				type: 'string',
-				displayOptions: {
-					show: {
-						resource: ['sales'],
-						operation: ['create-sales', 'update-sales'],
-					},
-				},
-				default: '',
-				description: 'Descrição da venda',
-			},
-		],
 	};
+
+	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
+		const resource = this.getNodeParameter('resource', 0) as string;
+		const operation = this.getNodeParameter('operation', 0) as string;
+
+		let results: INodeExecutionData[] = [];
+
+		try {
+			switch (resource) {
+				case 'statement':
+					switch (operation) {
+						case 'get-statement':
+							results = await handleGetStatement.call(this);
+							break;
+						default:
+							throw new NodeOperationError(
+								this.getNode(),
+								`Operação não suportada para Statement: ${operation}`,
+							);
+					}
+					break;
+
+				case 'sales':
+					switch (operation) {
+						case 'get-sales':
+							results = await handleGetSales.call(this);
+							break;
+						case 'get-sales-by-id':
+							results = await handleGetSalesById.call(this);
+							break;
+						case 'create-sales':
+							results = await handleCreateSales.call(this);
+							break;
+						case 'update-sales':
+							results = await handleUpdateSales.call(this);
+							break;
+						case 'delete-sales':
+							results = await handleDeleteSales.call(this);
+							break;
+						default:
+							throw new NodeOperationError(
+								this.getNode(),
+								`Operação não suportada para Sales: ${operation}`,
+							);
+					}
+					break;
+
+				default:
+					throw new NodeOperationError(this.getNode(), `Recurso não suportado: ${resource}`);
+			}
+
+			return [results];
+		} catch (error) {
+			if (error instanceof NodeOperationError) {
+				throw error;
+			}
+			throw new NodeOperationError(
+				this.getNode(),
+				`Erro na execução do nó Marvee: ${error.message}`,
+			);
+		}
+	}
 }

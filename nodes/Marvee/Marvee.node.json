@@ -1,18 +1,19 @@
 {
-	"node": "n8n-nodes-base.Marvee",
+	"node": "n8n-nodes-base.marvee",
 	"nodeVersion": "1.0",
 	"codexVersion": "1.0",
-	"categories": ["Miscellaneous"],
+	"categories": ["Data & Storage"],
 	"resources": {
 		"credentialDocumentation": [
 			{
-				"url": ""
+				"url": "https://docs.n8n.io/integrations/builtin/credentials/marveeapi/"
 			}
 		],
 		"primaryDocumentation": [
 			{
-				"url": ""
+				"url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.marvee/"
 			}
 		]
-	}
+	},
+	"alias": ["Marvee", "Financial", "Sales", "Statement", "API"]
 }
