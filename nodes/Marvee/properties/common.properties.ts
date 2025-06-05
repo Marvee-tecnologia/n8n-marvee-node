@@ -8,6 +8,18 @@ export const commonProperties: INodeProperties[] = [
 		noDataExpression: true,
 		options: [
 			{
+				name: 'Categoria',
+				value: 'categories',
+			},
+			{
+				name: 'Cliente',
+				value: 'customers',
+			},
+			{
+				name: 'Conta',
+				value: 'accounts',
+			},
+			{
 				name: 'Extrato',
 				value: 'statement',
 			},
@@ -17,6 +29,6 @@ export const commonProperties: INodeProperties[] = [
 			},
 		],
 		default: 'statement',
-		description: 'Recurso a ser acessado na API Marvee.',
+		description: 'Recurso a ser acessado na API Marvee',
 	},
 ];

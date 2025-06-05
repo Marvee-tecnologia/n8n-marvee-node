@@ -18,7 +18,7 @@ export async function getMarveeCustomersHelper(
 		const credentials = await context.getCredentials('marveeApi');
 		const apiClient = new MarveeApiClient(credentials, context);
 
-		const customers = await apiClient.get('/customers');
+		const customers = await apiClient.get('/clientes');
 
 		return customers.map((customer: any) => ({
 			name: customer.name,
@@ -41,7 +41,7 @@ export async function getMarveeAccountsHelper(
 		const credentials = await context.getCredentials('marveeApi');
 		const apiClient = new MarveeApiClient(credentials, context);
 
-		const accounts = await apiClient.get('/accounts');
+		const accounts = await apiClient.get('/contas');
 
 		return accounts.map((account: any) => ({
 			name: account.name,
@@ -64,7 +64,7 @@ export async function getMarveeCategoriesHelper(
 		const credentials = await context.getCredentials('marveeApi');
 		const apiClient = new MarveeApiClient(credentials, context);
 
-		const categories = await apiClient.get('/categories');
+		const categories = await apiClient.get('/categorias');
 
 		// Filtra apenas categorias de nível 3 como no código original
 		return categories

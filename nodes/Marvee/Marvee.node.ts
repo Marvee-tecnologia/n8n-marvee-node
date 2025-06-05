@@ -7,6 +7,9 @@ import {
 	NodeConnectionType,
 	NodeOperationError,
 } from 'n8n-workflow';
+import { handleGetAccounts } from './actions/accounts';
+import { handleGetCategories } from './actions/categories';
+import { handleGetCustomers } from './actions/customers';
 import {
 	handleCreateSales,
 	handleDeleteSales,
@@ -102,6 +105,45 @@ export class Marvee implements INodeType {
 							throw new NodeOperationError(
 								this.getNode(),
 								`Operação não suportada para Sales: ${operation}`,
+							);
+					}
+					break;
+
+				case 'customers':
+					switch (operation) {
+						case 'get-customers':
+							results = await handleGetCustomers.call(this);
+							break;
+						default:
+							throw new NodeOperationError(
+								this.getNode(),
+								`Operação não suportada para Customers: ${operation}`,
+							);
+					}
+					break;
+
+				case 'categories':
+					switch (operation) {
+						case 'get-categories':
+							results = await handleGetCategories.call(this);
+							break;
+						default:
+							throw new NodeOperationError(
+								this.getNode(),
+								`Operação não suportada para Categories: ${operation}`,
+							);
+					}
+					break;
+
+				case 'accounts':
+					switch (operation) {
+						case 'get-accounts':
+							results = await handleGetAccounts.call(this);
+							break;
+						default:
+							throw new NodeOperationError(
+								this.getNode(),
+								`Operação não suportada para Accounts: ${operation}`,
 							);
 					}
 					break;
