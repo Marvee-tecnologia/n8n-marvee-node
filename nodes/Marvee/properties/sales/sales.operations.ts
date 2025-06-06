@@ -19,16 +19,16 @@ export const salesOperations: INodeProperties[] = [
 				description: 'Atualiza uma venda existente',
 			},
 			{
+				name: 'Cadastrar',
+				value: 'store-sales',
+				action: 'Cadastrar venda',
+				description: 'Cadastra uma nova venda com todos os dados necessários',
+			},
+			{
 				name: 'Consultar',
 				value: 'get-sales',
 				action: 'Consultar vendas',
 				description: 'Consulta as vendas',
-			},
-			{
-				name: 'Criar',
-				value: 'create-sales',
-				action: 'Criar venda',
-				description: 'Cria uma nova venda',
 			},
 			{
 				name: 'Deletar',

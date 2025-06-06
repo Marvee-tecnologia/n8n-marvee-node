@@ -11,10 +11,10 @@ import { handleGetAccounts } from './actions/accounts';
 import { handleGetCategories } from './actions/categories';
 import { handleGetCustomers } from './actions/customers';
 import {
-	handleCreateSales,
 	handleDeleteSales,
 	handleGetSales,
 	handleGetSalesById,
+	handleStoreSales,
 	handleUpdateSales,
 } from './actions/sales';
 import { handleGetStatement } from './actions/statement';
@@ -92,8 +92,8 @@ export class Marvee implements INodeType {
 						case 'get-sales-by-id':
 							results = await handleGetSalesById.call(this);
 							break;
-						case 'create-sales':
-							results = await handleCreateSales.call(this);
+						case 'store-sales':
+							results = await handleStoreSales.call(this);
 							break;
 						case 'update-sales':
 							results = await handleUpdateSales.call(this);
