@@ -60,21 +60,71 @@ export async function handleUpdateSales(this: IExecuteFunctions): Promise<INodeE
 	const salesId = this.getNodeParameter('salesId', 0) as string;
 
 	// Obter parâmetros obrigatórios
-	const clienteId = this.getNodeParameter('clienteId', 0) as string;
-	const produtoId = this.getNodeParameter('produtoId', 0) as string;
-	const quantidade = this.getNodeParameter('quantidade', 0) as number;
-	const valorUnitario = this.getNodeParameter('valorUnitario', 0) as number;
-	const dataVenda = this.getNodeParameter('dataVenda', 0) as string;
-	const descricao = this.getNodeParameter('descricao', 0, '') as string;
+	const documentId = this.getNodeParameter('document_id', 0) as number;
+	const companyId = this.getNodeParameter('company_id', 0) as number;
 
-	const body = {
-		cliente_id: clienteId,
-		produto_id: produtoId,
-		quantidade,
-		valor_unitario: valorUnitario,
-		data_venda: dataVenda,
-		descricao,
+	// Construir objeto base com campos obrigatórios
+	const body: any = {
+		document_id: documentId,
+		company_id: companyId,
 	};
+
+	// Obter parâmetros opcionais
+	const peopleId = this.getNodeParameter('people_id', 0, null) as number | null;
+	const categoryId = this.getNodeParameter('category_id', 0, null) as number | null;
+	const paymentMethodType = this.getNodeParameter('payment_method_type', 0, '') as string;
+	const accountId = this.getNodeParameter('account_id', 0, null) as number | null;
+	const comment = this.getNodeParameter('comment', 0, '') as string;
+	const additionalInformation = this.getNodeParameter('additional_information', 0, '') as string;
+	const code = this.getNodeParameter('code', 0, '') as string;
+	const generationDate = this.getNodeParameter('generation_date', 0, '') as string;
+	const situation = this.getNodeParameter('situation', 0, '') as string;
+	const salesman = this.getNodeParameter('salesman', 0, '') as string;
+	const originalValue = this.getNodeParameter('original_value', 0, null) as number | null;
+	const value = this.getNodeParameter('value', 0, null) as number | null;
+	const discountValue = this.getNodeParameter('discount_value', 0, null) as number | null;
+	const additionalValue = this.getNodeParameter('additional_value', 0, null) as number | null;
+	const codeReference = this.getNodeParameter('code_reference', 0, '') as string;
+	const purchaseOrder = this.getNodeParameter('purchase_order', 0, '') as string;
+	const serviceOrder = this.getNodeParameter('service_order', 0, '') as string;
+	const chargeEmissionDay = this.getNodeParameter('charge_emission_day', 0, null) as number | null;
+	const chargeEmissionType = this.getNodeParameter('charge_emission_type', 0, '') as string;
+	const chargeEmissionTrigger = this.getNodeParameter('charge_emission_trigger', 0, '') as string;
+	const nfEmissionDay = this.getNodeParameter('nf_emission_day', 0, null) as number | null;
+	const nfEmissionType = this.getNodeParameter('nf_emission_type', 0, '') as string;
+	const nfEmissionTrigger = this.getNodeParameter('nf_emission_trigger', 0, '') as string;
+	const dataEmissao = this.getNodeParameter('data_emissao', 0, '') as string;
+	const nfseJustificada = this.getNodeParameter('nfse_justificada', 0, '') as string;
+	const nfseJustificativa = this.getNodeParameter('nfse_justificativa', 0, '') as string;
+
+	// Adicionar campos opcionais apenas se tiverem valor
+	if (peopleId !== null && peopleId !== 0) body.people_id = peopleId;
+	if (categoryId !== null && categoryId !== 0) body.category_id = categoryId;
+	if (paymentMethodType) body.payment_method_type = paymentMethodType;
+	if (accountId !== null && accountId !== 0) body.account_id = accountId;
+	if (comment) body.comment = comment;
+	if (additionalInformation) body.additional_information = additionalInformation;
+	if (code) body.code = code;
+	if (generationDate) body.generation_date = generationDate;
+	if (situation) body.situation = situation;
+	if (salesman) body.salesman = salesman;
+	if (originalValue !== null && originalValue !== 0) body.original_value = originalValue;
+	if (value !== null && value !== 0) body.value = value;
+	if (discountValue !== null && discountValue !== 0) body.discount_value = discountValue;
+	if (additionalValue !== null && additionalValue !== 0) body.additional_value = additionalValue;
+	if (codeReference) body.code_reference = codeReference;
+	if (purchaseOrder) body.purchase_order = purchaseOrder;
+	if (serviceOrder) body.service_order = serviceOrder;
+	if (chargeEmissionDay !== null && chargeEmissionDay !== 0)
+		body.charge_emission_day = chargeEmissionDay;
+	if (chargeEmissionType) body.charge_emission_type = chargeEmissionType;
+	if (chargeEmissionTrigger) body.charge_emission_trigger = chargeEmissionTrigger;
+	if (nfEmissionDay !== null && nfEmissionDay !== 0) body.nf_emission_day = nfEmissionDay;
+	if (nfEmissionType) body.nf_emission_type = nfEmissionType;
+	if (nfEmissionTrigger) body.nf_emission_trigger = nfEmissionTrigger;
+	if (dataEmissao) body.data_emissao = dataEmissao;
+	if (nfseJustificada) body.nfse_justificada = nfseJustificada;
+	if (nfseJustificativa) body.nfse_justificativa = nfseJustificativa;
 
 	try {
 		const response = await apiClient.put(`/vendas/${salesId}`, body);
