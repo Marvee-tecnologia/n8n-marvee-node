@@ -4,14 +4,10 @@ import { MarveeApiClient } from '../helpers/apiUtils';
 export async function handleGetSales(this: IExecuteFunctions): Promise<INodeExecutionData[]> {
 	const credentials = await this.getCredentials('marveeApi');
 	const apiClient = new MarveeApiClient(credentials, this);
-
-	// Obter parâmetros opcionais para filtros
 	const startDate = this.getNodeParameter('startDate', 0, '') as string;
 	const endDate = this.getNodeParameter('endDate', 0, '') as string;
 	const clienteIdFilter = this.getNodeParameter('clienteIdFilter', 0, '') as string;
 	const status = this.getNodeParameter('status', 0, '') as string;
-
-	// Construir query parameters
 	const queryParams: any = {};
 
 	if (startDate) {
@@ -55,21 +51,13 @@ export async function handleGetSalesById(this: IExecuteFunctions): Promise<INode
 export async function handleUpdateSales(this: IExecuteFunctions): Promise<INodeExecutionData[]> {
 	const credentials = await this.getCredentials('marveeApi');
 	const apiClient = new MarveeApiClient(credentials, this);
-
-	// Obter ID da venda
 	const salesId = this.getNodeParameter('salesId', 0) as string;
-
-	// Obter parâmetros obrigatórios
 	const documentId = this.getNodeParameter('document_id', 0) as number;
 	const companyId = this.getNodeParameter('company_id', 0) as number;
-
-	// Construir objeto base com campos obrigatórios
 	const body: any = {
 		document_id: documentId,
 		company_id: companyId,
 	};
-
-	// Obter parâmetros opcionais
 	const peopleId = this.getNodeParameter('people_id', 0, null) as number | null;
 	const categoryId = this.getNodeParameter('category_id', 0, null) as number | null;
 	const paymentMethodType = this.getNodeParameter('payment_method_type', 0, '') as string;
@@ -97,7 +85,6 @@ export async function handleUpdateSales(this: IExecuteFunctions): Promise<INodeE
 	const nfseJustificada = this.getNodeParameter('nfse_justificada', 0, '') as string;
 	const nfseJustificativa = this.getNodeParameter('nfse_justificativa', 0, '') as string;
 
-	// Adicionar campos opcionais apenas se tiverem valor
 	if (peopleId !== null && peopleId !== 0) body.people_id = peopleId;
 	if (categoryId !== null && categoryId !== 0) body.category_id = categoryId;
 	if (paymentMethodType) body.payment_method_type = paymentMethodType;
@@ -153,44 +140,29 @@ export async function handleDeleteSales(this: IExecuteFunctions): Promise<INodeE
 export async function handleStoreSales(this: IExecuteFunctions): Promise<INodeExecutionData[]> {
 	const credentials = await this.getCredentials('marveeApi');
 	const apiClient = new MarveeApiClient(credentials, this);
-
-	// Obter parâmetros obrigatórios
 	const dataCompetencia = this.getNodeParameter('data_competencia', 0) as string;
 	const tipoTomador = this.getNodeParameter('tipo_tomador', 0) as string;
-
-	// Construir objeto base
 	const body: any = {
 		data_competencia: dataCompetencia,
 		tipo_tomador: tipoTomador,
 	};
-
-	// Dados do tomador (quando necessário)
 	if (tipoTomador !== 'ST') {
 		const tomadorCnpjCpf = this.getNodeParameter('tomador_cnpj_cpf', 0) as string;
-
 		body.tomador = {
 			cnpj_cpf: tomadorCnpjCpf,
 		};
-
-		// Para pessoa física, pessoa física exterior e pessoa jurídica exterior
 		if (['PF', 'PFE', 'PJE'].includes(tipoTomador)) {
 			const razaoSocial = this.getNodeParameter('tomador_razao_social', 0) as string;
-
 			if (tipoTomador === 'PF') {
 				body.tomador.dados_gerais = {
 					razao_social: razaoSocial,
 				};
-
-				// Campos opcionais para PF
 				const email = this.getNodeParameter('tomador_email', 0, '') as string;
 				const ddd = this.getNodeParameter('tomador_ddd', 0, '') as number;
 				const telefone = this.getNodeParameter('tomador_telefone', 0, '') as string;
-
 				if (email) body.tomador.dados_gerais.email = email;
 				if (ddd) body.tomador.dados_gerais.ddd = ddd;
 				if (telefone) body.tomador.dados_gerais.telefone = telefone;
-
-				// Endereço (opcional para PF)
 				const cep = this.getNodeParameter('tomador_cep', 0, '') as string;
 				const numero = this.getNodeParameter('tomador_numero', 0, '') as number;
 				const complemento = this.getNodeParameter('tomador_complemento', 0, '') as string;
@@ -202,13 +174,10 @@ export async function handleStoreSales(this: IExecuteFunctions): Promise<INodeEx
 					if (complemento) body.tomador.endereco_contato.complemento = complemento;
 				}
 			} else {
-				// Para PFE e PJE
 				body.tomador.razao_social = razaoSocial;
 			}
 		}
 	}
-
-	// Campos opcionais da venda
 	const formaCobranca = this.getNodeParameter('forma_cobranca', 0, '') as string;
 	const codigoReferencia = this.getNodeParameter('codigo_referencia', 0, '') as string;
 	const ordemCompra = this.getNodeParameter('ordem_compra', 0, '') as string;
@@ -224,14 +193,11 @@ export async function handleStoreSales(this: IExecuteFunctions): Promise<INodeEx
 	if (vendedor) body.vendedor = vendedor;
 	if (observacoes) body.observacoes = observacoes;
 	if (infoAdicionalNfse) body.info_adicional_nfse = infoAdicionalNfse;
-
-	// Dados do serviço (obrigatórios)
 	const servicoDescricao = this.getNodeParameter('servico_descricao', 0) as string;
 	const servicoQuantidade = this.getNodeParameter('servico_quantidade', 0) as number;
 	const servicoValorUnitario = this.getNodeParameter('servico_valor_unitario', 0) as number;
 	const servicoValorDesconto = this.getNodeParameter('servico_valor_desconto', 0) as number;
 	const servicoValorAcrescimo = this.getNodeParameter('servico_valor_acrescimo', 0) as number;
-
 	body.servico = {
 		descricao: servicoDescricao,
 		quantidade: servicoQuantidade,
@@ -239,8 +205,6 @@ export async function handleStoreSales(this: IExecuteFunctions): Promise<INodeEx
 		valor_desconto: servicoValorDesconto,
 		valor_acrescimo: servicoValorAcrescimo,
 	};
-
-	// Parcelas do financeiro (obrigatórias)
 	const parcelas = this.getNodeParameter('financeiro_parcelas.parcela', 0, []) as Array<{
 		valor: number;
 		vencimento: string;
@@ -261,7 +225,6 @@ export async function handleStoreSales(this: IExecuteFunctions): Promise<INodeEx
 		})),
 	};
 
-	// Automação (opcional)
 	const usarAutomacaoCobranca = this.getNodeParameter(
 		'usar_automacao_cobranca',
 		0,

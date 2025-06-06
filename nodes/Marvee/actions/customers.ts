@@ -4,12 +4,8 @@ import { MarveeApiClient } from '../helpers/apiUtils';
 export async function handleGetCustomers(this: IExecuteFunctions): Promise<INodeExecutionData[]> {
 	const credentials = await this.getCredentials('marveeApi');
 	const apiClient = new MarveeApiClient(credentials, this);
-
-	// Obter parâmetros opcionais
 	const limit = this.getNodeParameter('limit', 0, 50) as number;
 	const offset = this.getNodeParameter('offset', 0, 0) as number;
-
-	// Construir query parameters
 	const queryParams: any = {};
 
 	if (limit > 0) {
