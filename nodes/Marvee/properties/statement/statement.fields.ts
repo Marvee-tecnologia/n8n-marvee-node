@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import { INodeProperties } from 'n8n-workflow';
 
 export const statementFields: INodeProperties[] = [
@@ -14,7 +15,7 @@ export const statementFields: INodeProperties[] = [
 			},
 		},
 		placeholder: 'Selecione a data de início',
-		default: '',
+		default: DateTime.now().startOf('month').toISO(),
 		description: 'Data de início para filtrar o extrato (obrigatório)',
 	},
 	{
@@ -24,13 +25,13 @@ export const statementFields: INodeProperties[] = [
 		placeholder: 'Selecione a data de fim',
 		required: true,
 		validateType: 'dateTime',
+		default: DateTime.now().endOf('month').toISO(),
 		displayOptions: {
 			show: {
 				resource: ['statement'],
 				operation: ['get-statement'],
 			},
 		},
-		default: '',
 		description: 'Data de fim para filtrar o extrato (obrigatório)',
 	},
 	{
@@ -93,5 +94,38 @@ export const statementFields: INodeProperties[] = [
 		],
 		default: [],
 		description: 'Status das transações para filtrar (múltipla seleção)',
+	},
+	{
+		displayName: 'Página',
+		name: 'page',
+		type: 'number',
+		typeOptions: {
+			minValue: 1,
+		},
+		displayOptions: {
+			show: {
+				resource: ['statement'],
+				operation: ['get-statement'],
+			},
+		},
+		default: 1,
+		description: 'Número da página para paginação (padrão: 1)',
+	},
+	{
+		displayName: 'Tamanho Da Página',
+		name: 'pageSize',
+		type: 'number',
+		typeOptions: {
+			minValue: 1,
+			maxValue: 200,
+		},
+		displayOptions: {
+			show: {
+				resource: ['statement'],
+				operation: ['get-statement'],
+			},
+		},
+		default: 20,
+		description: 'Número de registros por página (padrão: 50, máximo: 1000)',
 	},
 ];

@@ -11,11 +11,11 @@ export async function handleGetSales(this: IExecuteFunctions): Promise<INodeExec
 	const queryParams: any = {};
 
 	if (startDate) {
-		queryParams.data_inicio = startDate;
+		queryParams.startDate = startDate;
 	}
 
 	if (endDate) {
-		queryParams.data_fim = endDate;
+		queryParams.endDate = endDate;
 	}
 
 	if (clienteIdFilter) {
