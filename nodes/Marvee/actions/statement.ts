@@ -1,12 +1,11 @@
-import { DateTime } from 'luxon';
 import { IExecuteFunctions, INodeExecutionData, NodeOperationError } from 'n8n-workflow';
 import { MarveeApiClient } from '../helpers/apiUtils';
 
 export async function handleGetStatement(this: IExecuteFunctions): Promise<INodeExecutionData[]> {
 	const credentials = await this.getCredentials('marveeApi');
 	const apiClient = new MarveeApiClient(credentials, this);
-	const startDate = (this.getNodeParameter('startDate', 0) as DateTime).toUTC().toISO();
-	const endDate = (this.getNodeParameter('endDate', 0) as DateTime).toUTC().toISO();
+	const startDate = (this.getNodeParameter('startDate', 0) as any).toUTC().toISO();
+	const endDate = (this.getNodeParameter('endDate', 0) as any).toUTC().toISO();
 	if (!startDate || !endDate) {
 		throw new NodeOperationError(this.getNode(), 'Data de início e fim são obrigatórios');
 	}

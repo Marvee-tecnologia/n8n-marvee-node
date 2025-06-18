@@ -1,5 +1,5 @@
-import { DateTime } from 'luxon';
 import { INodeProperties } from 'n8n-workflow';
+import { endOfMonthISO, startOfMonthISO } from '../../helpers/dateUtils';
 
 export const statementFields: INodeProperties[] = [
 	{
@@ -15,7 +15,7 @@ export const statementFields: INodeProperties[] = [
 			},
 		},
 		placeholder: 'Selecione a data de início',
-		default: DateTime.now().startOf('month').toISO(),
+		default: startOfMonthISO(),
 		description: 'Data de início para filtrar o extrato (obrigatório)',
 	},
 	{
@@ -25,7 +25,7 @@ export const statementFields: INodeProperties[] = [
 		placeholder: 'Selecione a data de fim',
 		required: true,
 		validateType: 'dateTime',
-		default: DateTime.now().endOf('month').toISO(),
+		default: endOfMonthISO(),
 		displayOptions: {
 			show: {
 				resource: ['statement'],
