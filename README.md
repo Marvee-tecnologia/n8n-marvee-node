@@ -103,5 +103,5 @@ Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE.md](L
 
 <p align="center">
   <strong>Desenvolvido com ❤️ pela equipe Marvee</strong><br>
-  © 2020-2024 Marvee. Todos os direitos reservados.
+  © 2020 Marvee. Todos os direitos reservados.
 </p>
