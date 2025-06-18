@@ -1,6 +1,6 @@
 {
 	"name": "@marvee-tecnologia/n8n-nodes-marvee",
-	"version": "0.1.4",
+	"version": "0.1.5",
 	"description": "N8N Marvee",
 	"keywords": [
 		"n8n-community-node-package"
