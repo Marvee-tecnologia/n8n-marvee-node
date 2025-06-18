@@ -13,9 +13,9 @@ export const categoriesOperations: INodeProperties[] = [
 		},
 		options: [
 			{
-				name: 'Buscar Categorias',
+				name: 'Consultar',
 				value: 'get-categories',
-				action: 'Buscar todas as categorias',
+				action: 'Consultar categorias',
 				description: 'Retorna a lista de todas as categorias',
 			},
 		],

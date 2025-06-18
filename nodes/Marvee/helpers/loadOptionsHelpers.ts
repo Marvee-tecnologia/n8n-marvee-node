@@ -66,7 +66,7 @@ export async function getMarveeCategoriesHelper(
 
 		const categories = await apiClient.get('/categorias');
 
-		// Filtra apenas categorias de nível 3 como no código original
+		// Filtra apenas categorias de nível 3
 		return categories
 			.filter((category: any) => category.level === 3)
 			.map((category: any) => ({

@@ -13,9 +13,9 @@ export const accountsOperations: INodeProperties[] = [
 		},
 		options: [
 			{
-				name: 'Buscar Contas',
+				name: 'Consultar',
 				value: 'get-accounts',
-				action: 'Buscar todas as contas',
+				action: 'Consultar contas',
 				description: 'Retorna a lista de todas as contas',
 			},
 		],

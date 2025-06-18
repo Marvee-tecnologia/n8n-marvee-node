@@ -24,8 +24,13 @@ export const commonProperties: INodeProperties[] = [
 				value: 'statement',
 			},
 			{
-				name: 'Venda',
+				name: 'Venda (Em Breve)',
 				value: 'sales',
+				disabledOptions: {
+					hide: {
+						resource: ['*'],
+					},
+				},
 			},
 		],
 		default: 'statement',

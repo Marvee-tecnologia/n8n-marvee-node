@@ -13,9 +13,9 @@ export const customersOperations: INodeProperties[] = [
 		},
 		options: [
 			{
-				name: 'Buscar Clientes',
+				name: 'Consultar',
 				value: 'get-customers',
-				action: 'Buscar todos os clientes',
+				action: 'Consultar clientes',
 				description: 'Retorna a lista de todos os clientes',
 			},
 		],
