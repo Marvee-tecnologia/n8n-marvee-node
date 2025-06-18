@@ -36,11 +36,9 @@ export class MarveeApi implements ICredentialType {
 		},
 	};
 
-	// Teste de credenciais usando ICredentialTestRequest para simplicidade e robustez
-	// Esta abordagem é mais confiável durante desenvolvimento local com symlinks
 	test: ICredentialTestRequest = {
 		request: {
-			baseURL: 'http://localhost:3333/v1',
+			baseURL: 'https://api-prod-aws.marvee.com.br/v1',
 			url: '/health', // Endpoint simples para teste de conectividade
 			method: 'GET',
 			headers: {
@@ -49,29 +47,4 @@ export class MarveeApi implements ICredentialType {
 			},
 		},
 	};
-
-	/*
-	 * Alternativa: Teste mais complexo usando função async
-	 * Descomente se precisar de lógica de validação mais avançada
-	 *
-	 * async test(this: ICredentialTestFunctions): Promise<boolean> {
-	 * 	try {
-	 * 		const credentials = await this.getCredentials();
-	 * 		const response = await this.helpers.request({
-	 * 			method: 'GET',
-	 * 			url: 'http://localhost:3333/v1/health',
-	 * 			headers: {
-	 * 				'client-id': credentials['client-id'] as string,
-	 * 				'authorization': credentials['authorization'] as string,
-	 * 			},
-	 * 			json: true,
-	 * 		});
-	 *
-	 * 		// Validação adicional da resposta se necessário
-	 * 		return response && response.status === 'ok';
-	 * 	} catch (error: any) {
-	 * 		throw new Error(`Falha na conexão com API Marvee: ${error.message}`);
-	 * 	}
-	 * }
-	 */
 }
