@@ -1,5 +1,5 @@
 {
-	"name": "n8n-nodes-marvee",
+	"name": "@marvee-tech/n8n-nodes-marvee",
 	"version": "0.1.0",
 	"description": "N8N Marvee",
 	"keywords": [
@@ -9,7 +9,7 @@
 	"homepage": "https://marvee.com.br",
 	"author": {
 		"name": "Matheus Carvalho",
-		"email": "tecnologia@marvee.com.br"
+		"email": "matheus.carvalho@marvee.com.br"
 	},
 	"repository": {
 		"type": "git",
