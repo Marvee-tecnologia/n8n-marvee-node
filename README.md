@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://scontent.fbnu9-1.fna.fbcdn.net/v/t39.30808-6/472742313_1151706076503081_5803420543167063988_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=cc71e4&_nc_ohc=ug21G0ah_yoQ7kNvwH9oDKO&_nc_oc=AdmA4oA7RpzNpiMs-128PtuLbRUnA0IVq9ACN4oEFnZ8DNvYIayoSMY3FrFNHlQL9SnT_YKJ1JdSQdUDlZI935sX&_nc_zt=23&_nc_ht=scontent.fbnu9-1.fna&_nc_gid=5lR9jiaPVBjz3npqTUALGQ&oh=00_AfM3hfCIBd0WEqzHNVVy-erckmw-Tjaa_j9kXKJdZNLsAw&oe=6858944F" alt="Marvee Logo" width="1450">
+  <img src="https://lp.marvee.com.br/wp-content/uploads/2025/06/472742313_1151706076503081_5803420543167063988_n-1.jpg" alt="Marvee Logo" width="1450">
 </p>
 
 <h1 align="center">Marvee Node para n8n</h1>
