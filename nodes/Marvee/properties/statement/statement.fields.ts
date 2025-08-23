@@ -117,7 +117,7 @@ export const statementFields: INodeProperties[] = [
 		type: 'number',
 		typeOptions: {
 			minValue: 1,
-			maxValue: 200,
+			maxValue: 1000,
 		},
 		displayOptions: {
 			show: {
