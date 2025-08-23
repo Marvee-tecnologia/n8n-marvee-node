@@ -4,9 +4,9 @@ import { MarveeApiClient } from '../helpers/apiUtils';
 export async function handleGetStatement(this: IExecuteFunctions): Promise<INodeExecutionData[]> {
 	const credentials = await this.getCredentials('marveeApi');
 	const apiClient = new MarveeApiClient(credentials, this);
-	const startDate = (this.getNodeParameter('startDate', 0) as any).toUTC().toISO();
-	const endDate = (this.getNodeParameter('endDate', 0) as any).toUTC().toISO();
-	if (!startDate || !endDate) {
+	const dateStart = (this.getNodeParameter('dateStart', 0) as any).toUTC().toISO();
+	const dateEnd = (this.getNodeParameter('dateEnd', 0) as any).toUTC().toISO();
+	if (!dateStart || !dateEnd) {
 		throw new NodeOperationError(this.getNode(), 'Data de início e fim são obrigatórios');
 	}
 	const conta = this.getNodeParameter('conta', 0, []) as string[];
@@ -16,16 +16,16 @@ export async function handleGetStatement(this: IExecuteFunctions): Promise<INode
 	const pageSize = this.getNodeParameter('pageSize', 0, 50) as number;
 
 	const queryParams: {
-		startDate: string;
-		endDate: string;
+		dateStart: string;
+		dateEnd: string;
 		conta_id?: string[];
 		categorias?: string[];
 		status?: string[];
 		page?: number;
 		pageSize?: number;
 	} = {
-		startDate,
-		endDate,
+		dateStart,
+		dateEnd,
 	};
 
 	if (conta.length > 0) {

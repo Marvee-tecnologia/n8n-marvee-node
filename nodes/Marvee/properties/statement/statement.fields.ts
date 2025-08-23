@@ -4,7 +4,7 @@ import { endOfMonthISO, startOfMonthISO } from '../../helpers/dateUtils';
 export const statementFields: INodeProperties[] = [
 	{
 		displayName: 'Data Início *',
-		name: 'startDate',
+		name: 'dateStart',
 		type: 'dateTime',
 		required: true,
 		validateType: 'dateTime',
@@ -20,7 +20,7 @@ export const statementFields: INodeProperties[] = [
 	},
 	{
 		displayName: 'Data Fim *',
-		name: 'endDate',
+		name: 'dateEnd',
 		type: 'dateTime',
 		placeholder: 'Selecione a data de fim',
 		required: true,
