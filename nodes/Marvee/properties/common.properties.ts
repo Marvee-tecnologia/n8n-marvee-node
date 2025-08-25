@@ -8,6 +8,10 @@ export const commonProperties: INodeProperties[] = [
 		noDataExpression: true,
 		options: [
 			{
+				name: 'Ano',
+				value: 'years',
+			},
+			{
 				name: 'Categoria',
 				value: 'categories',
 			},
@@ -22,6 +26,10 @@ export const commonProperties: INodeProperties[] = [
 			{
 				name: 'Extrato',
 				value: 'statement',
+			},
+			{
+				name: 'Fluxo De Caixa',
+				value: 'cash-flow',
 			},
 			{
 				name: 'Venda (Em Breve)',

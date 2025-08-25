@@ -8,6 +8,7 @@ import {
 	NodeOperationError,
 } from 'n8n-workflow';
 import { handleGetAccounts } from './actions/accounts';
+import { handleGetCashFlow } from './actions/cash-flow';
 import { handleGetCategories } from './actions/categories';
 import { handleGetCustomers } from './actions/customers';
 import {
@@ -18,6 +19,7 @@ import {
 	handleUpdateSales,
 } from './actions/sales';
 import { handleGetStatement } from './actions/statement';
+import { handleGetYears } from './actions/years';
 import {
 	getMarveeAccountsHelper,
 	getMarveeCategoriesHelper,
@@ -144,6 +146,32 @@ export class Marvee implements INodeType {
 							throw new NodeOperationError(
 								this.getNode(),
 								`Operação não suportada para Accounts: ${operation}`,
+							);
+					}
+					break;
+
+				case 'cash-flow':
+					switch (operation) {
+						case 'get-cash-flow':
+							results = await handleGetCashFlow.call(this);
+							break;
+						default:
+							throw new NodeOperationError(
+								this.getNode(),
+								`Operação não suportada para Cash Flow: ${operation}`,
+							);
+					}
+					break;
+
+				case 'years':
+					switch (operation) {
+						case 'get-years':
+							results = await handleGetYears.call(this);
+							break;
+						default:
+							throw new NodeOperationError(
+								this.getNode(),
+								`Operação não suportada para Years: ${operation}`,
 							);
 					}
 					break;
