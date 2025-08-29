@@ -18,6 +18,12 @@ export const customersOperations: INodeProperties[] = [
 				action: 'Consultar clientes',
 				description: 'Retorna a lista de todos os clientes',
 			},
+			{
+				name: 'Criar',
+				value: 'create-customer',
+				action: 'Criar cliente',
+				description: 'Cria um novo cliente',
+			},
 		],
 		default: 'get-customers',
 		description: 'Define a operação a ser realizada com clientes',

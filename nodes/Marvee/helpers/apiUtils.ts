@@ -15,7 +15,8 @@ type MarveeApiContext = IExecuteFunctions | ILoadOptionsFunctions;
  * Suporta tanto contexto de execução quanto de loadOptions
  */
 export class MarveeApiClient {
-	private baseUrl = 'https://api-prod-aws.marvee.com.br/v1';
+	/// private baseUrl = 'https://api-prod-aws.marvee.com.br/v1';
+	private baseUrl = 'http://localhost:3333/v1';
 	private credentials: any;
 	private context: MarveeApiContext;
 

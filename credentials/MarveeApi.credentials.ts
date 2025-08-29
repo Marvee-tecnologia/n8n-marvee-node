@@ -38,7 +38,8 @@ export class MarveeApi implements ICredentialType {
 
 	test: ICredentialTestRequest = {
 		request: {
-			baseURL: 'https://api-prod-aws.marvee.com.br/v1',
+		//	baseURL: 'https://api-prod-aws.marvee.com.br/v1',
+		  baseURL: 'http://localhost:3333/v1', // Localhost
 			url: '/health', // Endpoint simples para teste de conectividade
 			method: 'GET',
 			headers: {
